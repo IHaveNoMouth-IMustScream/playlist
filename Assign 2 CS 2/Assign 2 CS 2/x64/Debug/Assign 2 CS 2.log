@@ -1,0 +1,3 @@
+﻿  musicplaylist.cpp
+C:\Users\ahmed\source\repos\Assign 2 CS 2\Assign 2 CS 2\musicplaylist.cpp(209,34): warning C4305: '*=': truncation from 'double' to 'float'
+  Assign 2 CS 2.vcxproj -> C:\Users\ahmed\source\repos\Assign 2 CS 2\x64\Debug\Assign 2 CS 2.exe
