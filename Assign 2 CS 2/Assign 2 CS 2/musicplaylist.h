@@ -6,16 +6,17 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
+using namespace std;
 
 // Song structure definition
 struct Song {
     int id;                // Unique identifier
-    std::string title;     // Song title
-    std::string artist;    // Artist name
-    std::string genre;     // Genre
-    std::string mood;      // Mood tag
+    string title;     // Song title
+    string artist;    // Artist name
+    string genre;     // Genre
+    string mood;      // Mood tag
 
-    Song(int id, std::string t, std::string a, std::string g, std::string m)
+    Song(int id, string t, string a, string g, string m)
         : id(id), title(t), artist(a), genre(g), mood(m) {}
 };
 
@@ -37,13 +38,13 @@ private:
     Node* table[TABLE_SIZE];
 
     // Hash function as a member function
-    unsigned long hashFunction(const std::string& key);
+    unsigned long hashFunction(const string& key);
 
 public:
     HashTable();
     void insert(Song* song);
     void remove(Song* song);
-    std::vector<Song*> lookup(const std::string& tagValue);
+    vector<Song*> lookup(const string& tagValue);
     ~HashTable();
 };
 
@@ -94,13 +95,13 @@ public:
 
 // Playlist generation function prototypes
 void buildBreadthFirstPlaylist(PlayQueue& queue,
-    const std::vector<std::vector<Song*>>& tagResults, PlayHistory& history);
+    const vector<vector<Song*>>& tagResults, PlayHistory& history);
 
 void buildWeightedShufflePlaylist(PlayQueue& queue,
-    const std::vector<std::vector<Song*>>& tagResults, PlayHistory& history);
+    const vector<vector<Song*>>& tagResults, PlayHistory& history);
 
 // File I/O function prototypes
-std::vector<Song*> loadSongLibrary(const std::string& filename);
-void savePlaylist(PlayQueue& queue, const std::string& filename);
+vector<Song*> loadSongLibrary(const string& filename);
+void savePlaylist(PlayQueue& queue, const string& filename);
 
 #endif

@@ -1,7 +1,8 @@
 #include "musicplaylist.h"
+using namespace std;
 
-
-unsigned long HashTable::hashFunction(const std::string& key) {
+//fix
+unsigned long HashTable::hashFunction(const string& key) {
     unsigned long hash = 0;
     for (char c : key) {
         hash = hash * 31 + c;  // polynomial rolling hash
@@ -43,8 +44,8 @@ void HashTable::remove(Song* song) {
     }
 }
 
-std::vector<Song*> HashTable::lookup(const std::string& tagValue) {
-    std::vector<Song*> results;
+vector<Song*> HashTable::lookup(const string& tagValue) {
+    vector<Song*> results;
     unsigned long index = hashFunction(tagValue);
     Node* current = table[index];
     while (current) {
@@ -139,7 +140,7 @@ void PlayHistory::printHistory() {
     if (!head) return;
     HistoryNode* current = head;
     for (int i = 0; i < count; i++) {
-        std::cout << current->song->title << " by " << current->song->artist << std::endl;
+        cout << current->song->title << " by " << current->song->artist << endl;
         current = current->next;
     }
 }
@@ -147,7 +148,7 @@ void PlayHistory::printHistory() {
 bool PlayHistory::wasRecentlyPlayed(Song* song, int lookback) {
     if (!head) return false;
     HistoryNode* current = head;
-    lookback = std::min(lookback, count);
+    lookback = min(lookback, count);
     for (int i = 0; i < lookback; i++) {
         if (current->song->id == song->id) return true;
         current = current->next;
@@ -167,12 +168,12 @@ PlayHistory::~PlayHistory() {
 }
 
 // Playlist generation implementation
-
+//fix
 void buildBreadthFirstPlaylist(PlayQueue& queue,
-    const std::vector<std::vector<Song*>>& tagResults, PlayHistory& history) {
+    const vector<vector<Song*>>& tagResults, PlayHistory& history) {
     size_t maxSize = 0;
     for (const auto& result : tagResults) {
-        maxSize = std::max(maxSize, result.size());
+        maxSize = max(maxSize, result.size());
     }
 
     for (size_t i = 0; i < maxSize; i++) {
@@ -184,11 +185,11 @@ void buildBreadthFirstPlaylist(PlayQueue& queue,
         }
     }
 }
-
+//fix
 void buildWeightedShufflePlaylist(PlayQueue& queue,
-    const std::vector<std::vector<Song*>>& tagResults, PlayHistory& history) {
+    const vector<vector<Song*>>& tagResults, PlayHistory& history) {
 
-    std::vector<std::pair<Song*, float>> weightedSongs;
+    vector<pair<Song*, float>> weightedSongs;
 
     // Collect all unique songs from tag results
     for (const auto& tagGroup : tagResults) {
@@ -216,7 +217,7 @@ void buildWeightedShufflePlaylist(PlayQueue& queue,
     }
 
     // Sort by weight in descending order (higher weights first)
-    std::sort(weightedSongs.begin(), weightedSongs.end(),
+    sort(weightedSongs.begin(), weightedSongs.end(),
         [](const auto& a, const auto& b) {
             return a.second > b.second;
         });
@@ -229,37 +230,37 @@ void buildWeightedShufflePlaylist(PlayQueue& queue,
 
 // File I/O implementation
 
-std::vector<Song*> loadSongLibrary(const std::string& filename) {
-    std::vector<Song*> library;
-    std::ifstream file(filename);
+vector<Song*> loadSongLibrary(const string& filename) {
+    vector<Song*> library;
+    ifstream file(filename);
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
+        cerr << "Error opening file: " << filename << endl;
         return library;
     }
 
-    std::string line;
+    string line;
     int id = 0;
-    while (std::getline(file, line)) {
+    while (getline(file, line)) {
         // Parse CSV format (title,artist,genre,mood)
-        std::string title, artist, genre, mood;
+        string title, artist, genre, mood;
         size_t pos = 0;
 
         // Parse title
         pos = line.find(',');
-        if (pos == std::string::npos) continue;
+        if (pos == string::npos) continue;
         title = line.substr(0, pos);
         line.erase(0, pos + 1);
 
         // Parse artist
         pos = line.find(',');
-        if (pos == std::string::npos) continue;
+        if (pos == string::npos) continue;
         artist = line.substr(0, pos);
         line.erase(0, pos + 1);
 
         // Parse genre
         pos = line.find(',');
-        if (pos == std::string::npos) continue;
+        if (pos == string::npos) continue;
         genre = line.substr(0, pos);
         line.erase(0, pos + 1);
 
@@ -274,15 +275,62 @@ std::vector<Song*> loadSongLibrary(const std::string& filename) {
     return library;
 }
 
-void savePlaylist(PlayQueue& queue, const std::string& filename) {
-    std::ofstream file(filename);
+
+/*string loadSongData(const string& filename) {
+    vector<Song*> library;
+    ifstream file(filename);
+
     if (!file.is_open()) {
-        std::cerr << "Error opening file for writing: " << filename << std::endl;
+        cerr << "Error opening file: " << filename << endl;
+        return library;
+    }
+
+    string line;
+    int id = 0;
+    while (getline(file, line)) {
+        // Parse CSV format (title,artist,genre,mood)
+        string title, artist, genre, mood;
+        size_t pos = 0;
+
+        // Parse title
+        pos = line.find(',');
+        if (pos == string::npos) continue;
+        title = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        // Parse artist
+        pos = line.find(',');
+        if (pos == string::npos) continue;
+        artist = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        // Parse genre
+        pos = line.find(',');
+        if (pos == string::npos) continue;
+        genre = line.substr(0, pos);
+        line.erase(0, pos + 1);
+
+        // Parse mood (rest of line)
+        mood = line;
+
+        // Create Song object and add to library
+        Song* newSong = new Song(id++, title, artist, genre, mood);
+        library.push_back(newSong);
+    }
+
+    return library;
+}
+*/
+//add load playlist
+void savePlaylist(PlayQueue& queue, const string& filename) {
+    ofstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening file for writing: " << filename << endl;
         return;
     }
 
     // Store songs temporarily
-    std::vector<Song*> songs;
+    vector<Song*> songs;
 
     // Extract songs, maintain order
     while (!queue.isEmpty()) {
@@ -292,7 +340,7 @@ void savePlaylist(PlayQueue& queue, const std::string& filename) {
     // Write to file
     for (Song* song : songs) {
         file << song->title << "," << song->artist << ","
-            << song->genre << "," << song->mood << std::endl;
+            << song->genre << "," << song->mood << endl;
     }
 
     // Restore queue
